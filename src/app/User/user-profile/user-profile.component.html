@@ -1,0 +1,105 @@
+<app-navbar></app-navbar>
+
+<div class="container my-3">
+    <div class="w-100 mb-3 d-flex justify-content-end">
+        <button class="btn btn-success btn-sm" (click)="openModal(createModel,'lg')">Create Workspace</button>
+    </div>
+
+    <div class="row mb-3">
+        <ng-container *ngIf="workspaces.length > 0">
+            <div class=" col-3 col-lg-3 col-md-6" *ngFor="let workspace of workspaces;">
+                <div class="card">
+                    <div class="card-header d-flex">
+                        <img class="icon" *ngIf="workspace.icon != ''" [src]="'http://localhost:8080/api/uploads/'+workspace.icon" alt="{{workspace.icon}}">
+                        <img class="icon" *ngIf="workspace.icon == ''" src="assets/icons/workspace.png" alt="...">
+                        <h5>{{workspace.title}}</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Total files: </strong>{{workspace.attachments.length}}</p>
+                        <p><strong>Created At: </strong>{{workspace.createdAt | date:'dd/MM/yyyy - HH:mm a'}}</p>
+                        <p><strong>Last Update: </strong>{{workspace.updatedAt | date:'dd/MM/yyyy - HH:mm a'}}</p>
+                        <div class="row g-1">
+                            <div class="col-6">
+                                <button class="btn btn-primary btn-sm w-100" routerLink="/workspace/{{workspace._id}}">View</button>
+                            </div>
+                            <div class="col-6">
+                                <button class="btn btn-danger btn-sm w-100" (click)="openModal(deleteModel,'md',workspace._id)">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>
+
+<ng-template #createModel let-modal>
+    <div class="modal-header">
+        <h3 class="modal-title">Create Workspace</h3>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form [formGroup]="workspaceForm" (ngSubmit)="OnCreateSubmit()">
+          <div class="modal-body">
+              <div class="row mb-3">
+                  <div class="col-8">
+                      <div class="mb-3">
+                          <label for="title">Workspace Title</label>
+                          <input type="text" id="title" class="form-control form-control-sm" placeholder="workspace title" formControlName="title" [ngClass]="{'is-invalid': isInvalidField(workspaceForm.get('title'))}">
+                      </div>
+                  </div>
+                  <div class="col-4">
+                      <div class="mb-3">
+                          <label for="icon" class="select-file">Select Icon</label>
+                          <input type="file" class="form-control form-control-sm" id="icon" (change)="onFileSelected($event)">
+                      </div>
+                  </div>
+                  <div class="col-8">
+                      <label for="desc">Description</label>
+                      <textarea name="" id="desc" cols="30" rows="3" class="form-control form-control-sm" formControlName="desc" placeholder="description"></textarea>
+                  </div>
+                  <div class="col-4">
+                      <div class="mb-3">
+                          <label for="files" class="select-file">Select Files</label>
+                          <input type="file" class="form-control form-control-sm" id="files" (change)="onFileChange($event)" multiple>
+                      </div>
+                  </div>
+              </div>
+              <div class="file-container row">
+                <div *ngFor="let file of selectedFiles; let i = index" class="col-auto">
+                    <ng-container *ngIf="file.type.startsWith('image/')">
+                        <img [src]="file.dataURL" alt="{{ file.name }}" width="100">
+                    </ng-container>
+                    <ng-container *ngIf="!file.type.startsWith('image/')">
+                        <img src="{{ getIconName(file.name) }}" alt="{{ file.name }}" width="100">
+                    </ng-container>
+                    <p class="file-name">{{file.name}}</p>
+                    <button type="button" (click)="removeFile(i)">Remove</button>
+                </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary " (click)="modal.dismiss()" >Cancel</button>
+            <button type="submit" class="btn btn-success " >Create</button>
+  
+          </div>
+      </form>
+</ng-template>
+
+<ng-template #deleteModel let-modal>
+    <div class="modal-header">
+        <h3 class="modal-title">Delete Workspace</h3>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <div class="modal-body text-center">
+            <p>Do you want to delete <strong *ngIf="selectedWorkspace">{{selectedWorkspace.title}}</strong>.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary " (click)="modal.dismiss()" >Cancel</button>
+          <button type="button" class="btn btn-danger " (click)="OnDeleteSubmit()">Delete</button>
+
+        </div>
+</ng-template>

@@ -1,0 +1,114 @@
+<app-admin-nav></app-admin-nav>
+
+<div class="container-fluid mt-5">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between">
+            <h5>All Users</h5>
+            <button class="btn btn-success btn-sm" (click)="openModal(createModel,'md')">Create New user</button>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">UserName</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Workspace count</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let user of users;index as i;">
+                    <th scope="row">{{i+1}}</th>
+                    <td>{{user.username}}</td>
+                    <td>{{user.email}}</td>
+                    <td>{{user.workspaceCount}}</td>
+                    <td [width]="200">
+                        <div>
+                            <button class="btn btn-primary btn-sm me-2" (click)="openModal(editModel,'md',user._id)">Edit</button>
+                            <button class="btn btn-danger btn-sm" (click)="openModal(deleteModel,'md',user._id)">Delete</button>
+                        </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+    </div>
+</div>
+
+<ng-template #createModel let-modal>
+  <div class="modal-header">
+      <h3 class="modal-title">Create User</h3>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form [formGroup]="userForm" (ngSubmit)="OnCreateUserSubmit()">
+      <div class="modal-body">
+          <div>
+            <label for="username">Username</label>
+            <input type="text" id="username" class="form-control" placeholder="username" formControlName="username" [ngClass]="{'is-invalid': isInvalidField(userForm.get('username'))}">
+          </div>
+          <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" class="form-control" placeholder="email" formControlName="email" [ngClass]="{'is-invalid': isInvalidField(userForm.get('email'))}">
+          </div>
+          <div>
+            <label for="password">Password</label>
+            <input type="password" id="password" class="form-control" placeholder="password" formControlName="password" [ngClass]="{'is-invalid': isInvalidField(userForm.get('password'))}"> 
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary " (click)="modal.dismiss()" >Cancel</button>
+        <button type="submit" class="btn btn-success ">Create</button>
+
+      </div>
+    </form>
+</ng-template>
+
+<ng-template #editModel let-modal>
+  <div class="modal-header">
+      <h3 class="modal-title">Create User</h3>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form [formGroup]="userForm2" (ngSubmit)="OnUpdateUserSubmit()">
+      <div class="modal-body">
+          <div>
+            <label for="username">Username</label>
+            <input type="text" id="username" class="form-control" placeholder="username" formControlName="username" [ngClass]="{'is-invalid': isInvalidField(userForm2.get('username'))}">
+          </div>
+          <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" class="form-control" placeholder="email" formControlName="email" [ngClass]="{'is-invalid': isInvalidField(userForm2.get('email'))}">
+          </div>
+          <div>
+            <label for="password">Password</label>
+            <input type="password" id="password" class="form-control" placeholder="password" formControlName="password" [ngClass]="{'is-invalid': isInvalidField(userForm2.get('password'))}"> 
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary " (click)="modal.dismiss()" >Cancel</button>
+        <button type="submit" class="btn btn-success ">Create</button>
+
+      </div>
+    </form>
+</ng-template>
+
+<ng-template #deleteModel let-modal>
+  <div class="modal-header">
+      <h3 class="modal-title">Delete User</h3>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+      <div class="modal-body text-center">
+          <p>Do you want to delete <strong>{{selectedUser.username}}</strong>.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary " (click)="modal.dismiss()" >Cancel</button>
+        <button type="button" class="btn btn-danger " (click)="OnDeleteUserSubmit()">Delete</button>
+
+      </div>
+</ng-template>

@@ -1,0 +1,34 @@
+<div class="container d-flex flex-column">
+    <div class="row vh-100">
+        <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 mx-auto d-table h-100">
+            <div class="d-table-cell align-middle">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h4>Admin Login</h4>
+                    </div>
+                    <div class="card-body">
+                        <form [formGroup]="loginForm" (ngSubmit)="OnLoginSubmit()">
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Username</label>
+                                <input type="email" class="form-control" placeholder="username" formControlName="username" [ngClass]="{'is-invalid': isInvalidfield(loginForm.get('username'),userNameError != '')}">
+                                <div class="invalid-feedback" *ngIf="userNameError != ''">
+                                    {{userNameError}}
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Password</label>
+                                <input type="password" class="form-control"placeholder="password" formControlName="password" [ngClass]="{'is-invalid': isInvalidfield(loginForm.get('password'),passwordError != '')}">
+                                <div class="invalid-feedback" *ngIf="passwordError!= ''">
+                                    {{passwordError}}
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <button class="btn btn-success w-100" type="submit">Login</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
